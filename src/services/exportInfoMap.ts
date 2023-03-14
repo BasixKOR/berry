@@ -311,12 +311,7 @@ namespace ts {
             }
         );
 
-        if (packageJsonFilter) {
-            const isAutoImportable = hasImportablePath && packageJsonFilter.allowsImportingSourceFile(to, moduleSpecifierResolutionHost);
-            moduleSpecifierCache?.setBlockedByPackageJsonDependencies(from.path, to.path, preferences, {}, !isAutoImportable);
-            return isAutoImportable;
-        }
-
+        moduleSpecifierCache?.setBlockedByPackageJsonDependencies(from.path, to.path, preferences, {}, !hasImportablePath);
         return hasImportablePath;
     }
 
@@ -358,7 +353,10 @@ namespace ts {
         const fromInfo = pnpApi.getPackageInformation(fromLocator);
         const toReference = fromInfo.packageDependencies.get(toLocator.name);
 
-        return toReference === toLocator.reference;
+        return toReference === toLocator.reference
+            || [...fromInfo.packageDependencies.values()].some(ref =>
+                ref[0] === toLocator.name && ref[1] === toLocator.reference
+            );
     }
 
     function isImportablePath(fromPath: string, toPath: string, getCanonicalFileName: GetCanonicalFileName, globalCachePath?: string): boolean {
