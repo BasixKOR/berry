@@ -116,23 +116,16 @@ const SLICES = [
   // https://github.com/merceyz/TypeScript/tree/merceyz/pnp-4.8-stable
   {
     from: `623a7ac5aa49250155d39e604b09b4d015468a9c`,
-    to: `623a7ac5aa49250155d39e604b09b4d015468a9c`,
+    to: `30840e0c2ad8e115c518f87379b7cb55fdf77f03`,
     onto: `60b5167a2a7015759d048cdd4655d1f66a8416a2`,
     range: `>=4.8.1-rc <4.8.4`,
   },
-  // https://github.com/merceyz/TypeScript/tree/merceyz/pnp-4.8
+  // https://github.com/merceyz/TypeScript/tree/BasixKOR/pnp-4.8
   {
     from: `d3747e92c3cd2d1f98739382c14226a725df38fd`,
-    to: `d3747e92c3cd2d1f98739382c14226a725df38fd`,
+    to: `a6e673c6f5b1d78586e4c1a89553a468472b0097`,
     onto: `a614119c1921ca61d549a7eee65c0b8c69c28752`,
     range: `>=4.8.4 <4.9.1-beta`,
-  },
-  // https://github.com/merceyz/TypeScript/tree/merceyz/pnp-4.9
-  {
-    from: `69c84aacfcea603c4d74721366cdcbbebd1c1681`,
-    to: `69c84aacfcea603c4d74721366cdcbbebd1c1681`,
-    onto: `549b5429d4837344e8c99657109bb6538fd2dbb5`,
-    range: `>=4.9.1-beta`,
   },
 ];
 
@@ -237,6 +230,7 @@ async function cloneRepository() {
     await execFile(`git`, [`clone`, `https://github.com/arcanis/typescript`, TS_REPO]);
     await execFile(`git`, [`remote`, `add`, `upstream`, `https://github.com/microsoft/typescript`], TS_REPO_SPAWN);
     await execFile(`git`, [`remote`, `add`, `upstream2`, `https://github.com/merceyz/typescript`], TS_REPO_SPAWN);
+    await execFile(`git`, [`remote`, `add`, `upstream3`, `https://github.com/BasixKOR/TypeScript`], TS_REPO_SPAWN);
   }
 
   try {
@@ -249,6 +243,7 @@ async function cloneRepository() {
   await execFile(`git`, [`fetch`, `origin`], TS_REPO_SPAWN);
   await execFile(`git`, [`fetch`, `upstream`], TS_REPO_SPAWN);
   await execFile(`git`, [`fetch`, `upstream2`], TS_REPO_SPAWN);
+  await execFile(`git`, [`fetch`, `upstream3`], TS_REPO_SPAWN);
 }
 
 async function resetGit(hash) {
