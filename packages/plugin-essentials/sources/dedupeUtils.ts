@@ -175,6 +175,9 @@ export async function dedupe(project: Project, {strategy, patterns, cache, repor
 
             project.storedResolutions.set(descriptor.descriptorHash, updatedPackage.locatorHash);
           })
+          .catch(() => {
+            report.reportInfo(MessageName.UNNAMED, `Well that failed.`);
+          })
           .finally(() => progress.tick()),
       ),
     );
