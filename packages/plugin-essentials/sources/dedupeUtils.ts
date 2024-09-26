@@ -69,6 +69,13 @@ const DEDUPE_ALGORITHMS: Record<Strategy, Algorithm> = {
         if (typeof pkg === `undefined`)
           throw new Error(`Assertion failed: The package (${locatorHash}) should have been registered`);
 
+        if (pkg.identHash !== descriptor.identHash) {
+          resolveOptions.report.reportWarning(MessageName.UNNAMED, `Non-matching references: ${structUtils.prettyLocator(
+            resolveOptions.project.configuration,
+            pkg,
+          )}`);
+        }
+
         return pkg.reference;
       });
 
@@ -81,8 +88,13 @@ const DEDUPE_ALGORITHMS: Record<Strategy, Algorithm> = {
       const updatedResolution = bestCandidate.locatorHash;
 
       const updatedPackage = project.originalPackages.get(updatedResolution);
-      if (typeof updatedPackage === `undefined`)
+      if (typeof updatedPackage === `undefined`) {
+        resolveOptions.report.reportWarning(MessageName.UNNAMED, `Not registered locator: ${structUtils.prettyLocator(
+          resolveOptions.project.configuration,
+          bestCandidate,
+        )}`);
         throw new Error(`Assertion failed: The package (${updatedResolution}) should have been registered`);
+      }
 
       if (updatedResolution === currentResolution)
         return null;
