@@ -64,14 +64,13 @@ const DEDUPE_ALGORITHMS: Record<Strategy, Algorithm> = {
       if (locators.size === 1)
         return null;
 
-      resolveOptions.report.reportWarning(MessageName.UNNAMED, `i guess we doin ${structUtils.prettyDescriptor(project.configuration, descriptor)} now`);
-
       const references = [...locators].map(locatorHash => {
         const pkg = project.originalPackages.get(locatorHash);
         if (typeof pkg === `undefined`)
           throw new Error(`Assertion failed: The package (${locatorHash}) should have been registered`);
 
         if (pkg.identHash !== descriptor.identHash) {
+          resolveOptions.report.reportWarningOnce(MessageName.UNNAMED, `i guess we doin ${structUtils.prettyDescriptor(project.configuration, descriptor)} now`, {key: descriptor.descriptorHash});
           resolveOptions.report.reportWarning(MessageName.UNNAMED, `Non-matching references: ${structUtils.prettyLocator(
             project.configuration,
             pkg,
@@ -91,6 +90,7 @@ const DEDUPE_ALGORITHMS: Record<Strategy, Algorithm> = {
 
       const updatedPackage = project.originalPackages.get(updatedResolution);
       if (typeof updatedPackage === `undefined`) {
+        resolveOptions.report.reportWarningOnce(MessageName.UNNAMED, `i guess we doin ${structUtils.prettyDescriptor(project.configuration, descriptor)} now`, {key: descriptor.descriptorHash});
         resolveOptions.report.reportWarning(MessageName.UNNAMED, `Not registered locator: ${structUtils.prettyLocator(
           resolveOptions.project.configuration,
           bestCandidate,
@@ -177,8 +177,8 @@ export async function dedupe(project: Project, {strategy, patterns, cache, repor
 
             project.storedResolutions.set(descriptor.descriptorHash, updatedPackage.locatorHash);
           })
-          .catch(() => {
-            report.reportInfo(MessageName.UNNAMED, `Well that failed.`);
+          .catch(e => {
+            report.reportError(MessageName.EXCEPTION, e.stack);
           })
           .finally(() => progress.tick()),
       ),
