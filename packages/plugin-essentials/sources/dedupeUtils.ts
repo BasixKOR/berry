@@ -123,7 +123,7 @@ export async function dedupe(project: Project, {strategy, patterns, cache, repor
     checksums: project.storedChecksums,
     fetcher,
     project,
-    report: throwReport,
+    report,
     skipIntegrityCheck: true,
     cacheOptions: {
       skipIntegrityCheck: true,
