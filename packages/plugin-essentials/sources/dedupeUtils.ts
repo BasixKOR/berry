@@ -64,6 +64,8 @@ const DEDUPE_ALGORITHMS: Record<Strategy, Algorithm> = {
       if (locators.size === 1)
         return null;
 
+      resolveOptions.report.reportInfo(MessageName.UNNAMED, `i guess we doin ${structUtils.prettyDescriptor(project.configuration, descriptor)} now`);
+
       const references = [...locators].map(locatorHash => {
         const pkg = project.originalPackages.get(locatorHash);
         if (typeof pkg === `undefined`)
@@ -71,7 +73,7 @@ const DEDUPE_ALGORITHMS: Record<Strategy, Algorithm> = {
 
         if (pkg.identHash !== descriptor.identHash) {
           resolveOptions.report.reportWarning(MessageName.UNNAMED, `Non-matching references: ${structUtils.prettyLocator(
-            resolveOptions.project.configuration,
+            project.configuration,
             pkg,
           )}`);
         }
